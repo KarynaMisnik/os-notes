@@ -2031,3 +2031,66 @@ Allows non-contiguous memory allocation.
 
 Disadvantage:
 Slightly slower due to address translation overhead.
+
+4️⃣ Segmentation
+
+Memory divided based on logical segments like code, stack, heap, etc.
+
+Each segment has a variable length.
+
+Advantage: Logical view (easier protection).
+Disadvantage: External fragmentation can occur.
+
+5️⃣ Virtual Memory
+
+The illusion of a large, continuous memory even if physical RAM is limited.
+
+Achieved using disk space (swap file / paging file).
+
+How it works:
+
+Parts of a program not currently used are stored on disk.
+
+When needed, OS swaps them into RAM (and possibly moves other parts out).
+
+Benefits:
+
+Run programs larger than physical RAM.
+
+Multitasking more efficient.
+
+Downside:
+
+Slower, since disk access is much slower than RAM.
+
+🧱 Memory Protection
+
+The OS must prevent processes from accessing memory that isn’t theirs.
+
+Mechanisms include:
+
+Base and limit registers → define valid address range.
+
+Page tables → restrict memory access per process.
+
+Privilege levels → kernel vs user mode.
+
+If a process accesses illegal memory → segmentation fault / access violation occurs.
+
+🔁 Swapping
+
+When physical memory is full:
+
+OS can swap out inactive processes (move them to disk).
+
+Swap in when needed again.
+
+This allows multitasking but introduces context-switching and disk latency.
+
+🧩 Shared Memory
+
+Sometimes two or more processes need to share data efficiently.
+
+OS can map a shared region into both processes’ address spaces.
+
+Used for interprocess communication (IPC) — much faster than message passing.
