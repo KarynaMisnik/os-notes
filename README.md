@@ -663,23 +663,15 @@ Computing ideas are not permanently extinct; they resurface depending on relativ
 Memory constraints drove low-level programming:
 
 IBM 7090/7094 (late 1950s–1964): ~128 KB memory → assembly language for both programs and operating systems to conserve memory.
-
 High-level languages emerged when resources improved:
-
 FORTRAN, COBOL compilers became good → assembly language declined.
 
 Minicomputers (e.g., PDP-1, 4 KB memory) → assembly language resurged due to tight memory.
-
 Microcomputers and embedded systems repeated this pattern:
-
 Early 1980s microcomputers: 4 KB memory → assembly language dominant.
-
 Embedded computers (same CPUs as microcomputers) → assembly used initially.
-
 Modern trend toward high-level languages as resources grow:
-
 Personal computers: abundant memory → C, C++, Java, etc.
-
 Smart cards: small memory → sometimes Java interpreted, not compiled.
 
 Takeaway:
@@ -693,19 +685,14 @@ when resources expand, high-level languages flourish. This cyclical pattern mirr
 <ins>Early mainframes (IBM 7090/7094):</ins>
 
 No protection hardware → monoprogramming only.
-
 A buggy program could crash the OS or entire machine.
 
 IBM 360:
 
 Introduced primitive protection hardware → allowed multiprogramming (multiple programs in memory, taking turns running).
-
 Monoprogramming became obsolete… temporarily.
-
 Early minicomputers (PDP-1, PDP-8):
-
 No protection hardware → back to monoprogramming.
-
 Later, PDP-11 added protection hardware → multiprogramming and eventually UNIX.
 
 <ins>Early microcomputers (Intel 8080):</ins>
@@ -729,13 +716,11 @@ Concepts like multiprogramming become “obsolete” and then resurface dependin
 <ins>Mainframes:</ins>
 
 Initially: No protection hardware → single-program operation, simple OS.
-
 Later: Added protection hardware → multiprogramming → full timesharing.
 
 <ins>Minicomputers:</ins>
 
 Initially: No protection hardware → ran one program at a time.
-
 Later: Gained protection hardware → ran multiple programs.
 
 <ins>Microcomputers (early PCs):</ins>
@@ -751,7 +736,6 @@ Followed the same pattern → started simple, gradually gained more advanced OS 
 <ins>Underlying Principle:</ins>
 
 Software development is dictated by technology.
-
 Limitations in memory or protection hardware forced simpler OS design; improvements enabled more complex functionality.
 
 **Takeaway:**
@@ -767,37 +751,26 @@ and timesharing are reincarnated across generations of computing devices.
 <ins>Early Mainframes (1950s–1960s):</ins>
 
 Primarily magnetic-tape based: programs read from tape, compiled, run, and results written back to tape.
-
 No disks, no file system initially.
-
 IBM RAMAC (1956): First hard disk, 5 million 7-bit characters (~medium-res photo), occupied ~4 m², very expensive (~$35,000/year).
-
 Led to primitive file systems.
 
 CDC 6600 (1964):
-
 Fastest computer of its time.
-
 Allowed “permanent files” with user-assigned names, creating a single-level directory.
-
 Mainframes eventually evolved to complex hierarchical file systems, e.g., MULTICS.
 
 <ins>Minicomputers (e.g., PDP-11, 1970):</ins>
 
 Standard disk: RK05, 2.5 MB, compact compared to RAMAC.
-
 Initially had single-level directories.
-
 Microcomputers (early PCs, CP/M):
-
 Floppy disks, single-level directory system.
-
 File system concepts were still simple, mirroring early minicomputers.
 
 **Takeaway:**
 
 File systems evolved alongside storage technology: from no disks → single-level directories → hierarchical directories.
-
 Early computers were constrained by capacity and cost, limiting the complexity of storage management.
 
 #### Virtual memory
@@ -807,29 +780,21 @@ Early computers were constrained by capacity and cost, limiting the complexity o
 <ins>Virtual Memory:</ins>
 
 Allows programs larger than physical RAM to run by swapping pages between RAM and disk.
-
 First appeared on mainframes, then adopted by minicomputers and later microcomputers.
-
 Enabled dynamic linking: programs could load libraries at runtime instead of compiling them in.
-
 MULTICS was the first system to support this feature.
 
 <ins>Recycling of Ideas:</ins>
 
 Many concepts originate in one context, become obsolete, then reappear in new contexts:
-
 Assembly language → revived in early microcomputers
-
 Monoprogramming → reappears in tiny embedded systems
-
 Single-level directories → reused in early PCs
-
 This demonstrates the technological pendulum: ideas are dependent on hardware capabilities and system requirements.
 
 **Broader Insight:**
 
 Studying older concepts and algorithms is valuable because they may resurface in modern contexts like embedded systems or smart cards.
-
 Essentially, virtual memory is an example of a concept that started in high-end systems and trickled down over time, while older “obsolete” ideas often re-emerge in constrained environments.
 
 ## System Calls
@@ -837,110 +802,74 @@ Essentially, virtual memory is an example of a concept that started in high-end 
 1. What Are System Calls?
 
 A system call (syscall) is a controlled entry point into the operating system kernel. It allows a user program to request a service from the OS that cannot be performed in user mode, such as accessing hardware, creating processes, or performing I/O.
-
 Key idea: User programs cannot directly access hardware for safety and protection; they must go through the OS using system calls.
 
 2. Why System Calls Exist
 
 Protection: Prevents user programs from crashing the system or accessing other processes’ memory.
-
 Abstraction: Hides hardware complexity (e.g., disk layout, device registers) behind clean APIs.
-
 Resource management: Allows the OS to manage CPU, memory, and I/O devices efficiently.
 
 3. How System Calls Work
 
 User program executes a library function (e.g., open(), read())
-
 Library code triggers a software interrupt or trap
-
 CPU switches to kernel mode
-
 OS executes the requested service
-
 Result is returned to the user program
-
 CPU switches back to user mode
-
 Think of it as a door between user mode and kernel mode, controlled and secure.
 
 4. Categories of System Calls
 
 System calls can be broadly classified into several categories:
-
 a. Process Control
-
 Purpose: Manage processes (creation, execution, termination, scheduling).
 
 Examples:
-
 fork() → create a new process
-
 exec() → replace process memory with a new program
-
 exit() → terminate a process
-
 wait() → wait for a child process to finish
 
 b. File Management
-
 Purpose: Access, create, manipulate files and directories.
 
 Examples:
-
 open(), close() → open/close a file
-
 read(), write() → read from/write to a file
-
 unlink() → delete a file
-
 mkdir(), rmdir() → create/remove directories
 
 c. Device Management
-
 Purpose: Communicate with I/O devices through device drivers.
 
 Examples:
-
 ioctl() → device-specific operations
-
 read(), write() → on special files representing devices
 
 d. Information Maintenance
-
 Purpose: Obtain system or process information, or modify it.
 
 Examples:
-
 getpid() → get process ID
-
 alarm() → set a timer
-
 time() → get current time
 
 e. Communication
-
 Purpose: Enable interprocess communication (IPC).
 
 Examples:
-
 pipe() → create a pipe between processes
-
 shmget() → allocate shared memory
-
 msgget() → create message queues
-
 socket() → network communication
 
 5. Mechanism Details
-
-System Call Invocation: Usually via a software interrupt, trap, or a special CPU instruction (syscall in x86-64).
-
-Kernel Mode: System calls execute in privileged kernel mode, which can directly access hardware.
-
-Return Values: Typically indicate success or failure, with -1 or an error code on failure.
-
-Libraries: C standard library (libc) often wraps system calls for easier usage (e.g., printf() calls write() internally).
+   System Call Invocation: Usually via a software interrupt, trap, or a special CPU instruction (syscall in x86-64).
+   Kernel Mode: System calls execute in privileged kernel mode, which can directly access hardware.
+   Return Values: Typically indicate success or failure, with -1 or an error code on failure.
+   Libraries: C standard library (libc) often wraps system calls for easier usage (e.g., printf() calls write() internally).
 
 6. Examples
 
@@ -970,40 +899,30 @@ Here, open(), read(), write(), close() are direct system calls handled by the ke
 7. Important Concepts Related to System Calls
 
 Blocking vs Non-blocking: Some system calls may block the process until completion (e.g., read()), others return immediately (e.g., fcntl() with O_NONBLOCK).
-
 Signals and Interrupts: Certain system calls can be interrupted by signals (e.g., timers, I/O events).
-
 File Descriptors: Numeric handles returned by the OS to identify files, sockets, or devices.
-
 Context Switching: When a syscall occurs, CPU switches from user to kernel mode, saving the process state.
 
 8. Practical Considerations
-
-System calls are slower than library functions because of the user-to-kernel mode switch.
-
-Minimizing syscalls in performance-critical applications is often desirable.
-
-Security: Only kernel can enforce access permissions, so system calls are the gatekeepers for protected resources.
+   System calls are slower than library functions because of the user-to-kernel mode switch.
+   Minimizing syscalls in performance-critical applications is often desirable.
+   Security: Only kernel can enforce access permissions, so system calls are the gatekeepers for protected resources.
 
 ## Operating System Structure ❗
 
 #### Monolithic Systems
 
 1. Definition
-
-A monolithic OS is one in which the entire operating system runs as a single program in kernel mode.
-All the services—process management, memory management, file systems, device drivers, and system calls—
-are compiled into one large executable.
+   A monolithic OS is one in which the entire operating system runs as a single program in kernel mode.
+   All the services—process management, memory management, file systems, device drivers, and system calls—
+   are compiled into one large executable.
 
 **Key idea:** Everything lives in kernel space and can directly call any other part of the OS.
 
 2. Structure and Organization
-
-The OS is a collection of procedures (functions or modules).
-
-Each procedure can freely call any other procedure if needed.
-
-No inherent restrictions on access or communication between procedures.
+   The OS is a collection of procedures (functions or modules).
+   Each procedure can freely call any other procedure if needed.
+   No inherent restrictions on access or communication between procedures.
 
 <code>Implication:</code>
 
@@ -1456,8 +1375,7 @@ Input/output devices let the user interact with the machine.
 It’s also called the stored-program concept → programs are stored in memory just like data.
 
 2. The Components
-
-Here’s the basic structure:
+   Here’s the basic structure:
 
 ```bash
            +-------------------+
@@ -1702,13 +1620,11 @@ KVM (Kernel-based Virtual Machine)
 Proxmox VE
 
 ✅ Pros:
-
 High performance (no host OS overhead)
 Strong isolation and security
 Reliable for servers and cloud environments
 
 ❌ Cons:
-
 Requires dedicated hardware
 More complex to manage and install
 
@@ -1724,15 +1640,11 @@ VMware Workstation / Player
 Oracle VirtualBox
 Parallels Desktop (macOS)
 QEMU
-
 ✅ Pros:
-
 Easy to install and use
 Great for personal computers and labs
 Uses host OS drivers for hardware compatibility
-
 ❌ Cons:
-
 Lower performance (extra layer of host OS)
 Weaker security and stability
 Host OS failure affects all VMs
@@ -2033,64 +1945,43 @@ Disadvantage:
 Slightly slower due to address translation overhead.
 
 4️⃣ Segmentation
-
 Memory divided based on logical segments like code, stack, heap, etc.
-
 Each segment has a variable length.
 
 Advantage: Logical view (easier protection).
 Disadvantage: External fragmentation can occur.
 
 5️⃣ Virtual Memory
-
 The illusion of a large, continuous memory even if physical RAM is limited.
-
 Achieved using disk space (swap file / paging file).
 
 How it works:
-
 Parts of a program not currently used are stored on disk.
-
 When needed, OS swaps them into RAM (and possibly moves other parts out).
 
 Benefits:
-
 Run programs larger than physical RAM.
-
 Multitasking more efficient.
 
 Downside:
-
 Slower, since disk access is much slower than RAM.
 
 🧱 Memory Protection
-
 The OS must prevent processes from accessing memory that isn’t theirs.
 
 Mechanisms include:
-
 Base and limit registers → define valid address range.
-
 Page tables → restrict memory access per process.
-
 Privilege levels → kernel vs user mode.
-
 If a process accesses illegal memory → segmentation fault / access violation occurs.
 
 🔁 Swapping
-
 When physical memory is full:
-
 OS can swap out inactive processes (move them to disk).
-
 Swap in when needed again.
-
 This allows multitasking but introduces context-switching and disk latency.
 
 🧩 Shared Memory
-
 Sometimes two or more processes need to share data efficiently.
-
 OS can map a shared region into both processes’ address spaces.
-
 Used for interprocess communication (IPC) — much faster than message passing.
