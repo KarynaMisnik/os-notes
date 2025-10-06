@@ -20,6 +20,7 @@
 - [Memory Management](#memory-management)
 - [Processes](#processes)
 - [Concurrency, Parallelism, Threads & Interrupts](#concurrency-parallelism-threads-interrupts)
+- [File systems & partitioning](#file-systems-partitioning)
 
 🌐 Operating System — Key Concepts ❗
 
@@ -2408,3 +2409,145 @@ Used for preemptive scheduling — CPU timer interrupt forces context switch.
 | **Parallelism** | Tasks _running simultaneously_               | Multi-core execution  | Video rendering on 8 cores         |
 | **Threads**     | Lightweight execution units inside a process | Share memory          | Word processor: typing + autosave  |
 | **Interrupts**  | Signals that pause CPU to handle events      | Asynchronous handling | Keyboard press, I/O completion     |
+
+## File systems & partitioning
+
+💾 1. What Is a File System?
+
+A file system (FS) is the method an Operating System uses to:
+Store,
+Organize,
+Retrieve,
+
+And manage data on storage devices (like HDDs, SSDs, USB drives, etc.).
+Without a file system, your data would just be a raw block of bytes — no folders, no filenames, no structure.
+
+🗂️ What a File System Does
+
+File organization — groups data into files (documents, programs, media, etc.).
+Directory management — organizes files into folders (directories) for hierarchy.
+
+Metadata storage — keeps info like:
+File name,
+Size,
+Ownership,
+Permissions,
+Modification time.
+
+Space allocation — decides where each file’s data is placed on disk blocks.
+Access control — enforces file permissions and user access rules.
+I/O operations — provides system calls like <code>open()</code>, <code>read()</code>, <code>write()</code>, <code>close()</code>.
+
+⚙️ Common File Systems
+
+| OS                             | Common File Systems          | Notes                                             |
+| ------------------------------ | ---------------------------- | ------------------------------------------------- |
+| **Windows**                    | FAT32, NTFS, exFAT           | NTFS supports permissions, encryption, journaling |
+| **Linux / UNIX**               | ext2, ext3, ext4, XFS, Btrfs | ext4 is most common on Linux systems              |
+| **macOS**                      | HFS+, APFS                   | APFS optimized for SSDs and encryption            |
+| **Cross-platform / Removable** | FAT32, exFAT                 | Works on many OSes, used in USB drives            |
+
+🧱 2. What Is a Partition?
+
+A partition is a logical division of a physical disk.
+Think of it as splitting a hard drive into independent “sections,” each of which can have its own file system.
+
+Example:
+
+```bash
+Physical Disk (500 GB)
+ ├── Partition 1 (C:) → Windows NTFS
+ ├── Partition 2 (D:) → Data (NTFS)
+ └── Partition 3 (E:) → Linux ext4
+```
+
+Each partition behaves like a separate disk to the operating system.
+
+🧩 Why Use Partitions?
+
+Multi-boot systems: Install multiple OSes (Windows + Linux).
+Data separation: Keep OS files and user data separate.
+Backup & recovery: Reinstall OS without deleting data.
+Security: Isolate sensitive data on a separate partition.
+Performance: Some file systems are better for specific workloads.
+
+🧭 Partition Table Types
+
+| Type                           | Used by             | Notes                                             |
+| ------------------------------ | ------------------- | ------------------------------------------------- |
+| **MBR (Master Boot Record)**   | Older BIOS systems  | Supports up to 4 primary partitions, disks ≤ 2 TB |
+| **GPT (GUID Partition Table)** | Modern UEFI systems | Supports 128+ partitions, disks > 2 TB            |
+
+📁 3. Relationship Between Partitions and File Systems
+
+Each partition must be formatted with a file system before it can store files.
+
+Example:
+
+```bash
+SSD (512 GB)
+ ├── Partition 1 → 100 GB → NTFS (Windows)
+ ├── Partition 2 → 100 GB → ext4 (Linux)
+ └── Partition 3 → 312 GB → exFAT (Shared data)
+```
+
+The OS can mount each partition into its directory tree.
+
+🔗 Mounting (especially in UNIX/Linux)
+
+“Mounting” means attaching a file system to a directory.
+
+Example:
+Before mounting: /mnt/data is empty.
+After mounting: /mnt/data shows files from another partition or disk.
+You can mount USB drives, CD-ROMs, or network shares this way.
+
+🧠 4. File System Structure (Internal Overview)
+
+Most file systems have 4 key parts:
+
+| Component       | Purpose                                                               |
+| --------------- | --------------------------------------------------------------------- |
+| **Boot block**  | Contains startup info (used for booting OS).                          |
+| **Superblock**  | Holds metadata — file system size, type, free blocks, etc.            |
+| **Inode table** | Stores file attributes (owner, permissions, pointers to data blocks). |
+| **Data blocks** | Contain actual file contents.                                         |
+
+🧾 Example (UNIX-style File System)
+
+```bash
+/ (root)
+ ├── /bin     → Essential commands
+ ├── /home    → User files
+ ├── /etc     → System config
+ ├── /var     → Logs, caches
+ └── /dev     → Device files
+```
+
+Each directory is just a special file listing other files.
+
+⚖️ 5. Pros and Cons
+
+| Concept                                    | Advantages                                                        | Disadvantages                                   |
+| ------------------------------------------ | ----------------------------------------------------------------- | ----------------------------------------------- |
+| **Multiple Partitions**                    | Easier backup, better organization, can dual-boot                 | Limited flexibility (space fixed per partition) |
+| **Modern File Systems (e.g., NTFS, ext4)** | Support permissions, journaling (protects data), large file sizes | More complex management                         |
+| **Simple File Systems (e.g., FAT32)**      | Simple, portable, compatible with many OSes                       | Lacks security & journaling                     |
+
+🔐 6. File Permissions & Security (Quick Recap)
+
+Each file has access rights (Read, Write, Execute).
+
+In UNIX:
+
+rwxr-x--x → Owner: read/write/execute; Group: read/execute; Others: execute only.
+Managed by file system metadata.
+
+🧭 In Short
+| Term | Meaning |
+| --------------- | -------------------------------------------------------- |
+| **Partition** | Logical division of a physical disk. |
+| **File system** | Data structure and rules for managing files. |
+| **Formatting** | Prepares a partition with a specific file system. |
+| **Mounting** | Attaching a file system to the OS’s directory tree. |
+| **Metadata** | Information about files (size, permissions, timestamps). |
