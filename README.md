@@ -19,6 +19,7 @@
 - [Kernel](#kernel)
 - [Memory Management](#memory-management)
 - [Processes](#processes)
+- [Concurrency, Parallelism, Threads & Interrupts](#concurrency-parallelism-threads-interrupts)
 
 🌐 Operating System — Key Concepts ❗
 
@@ -2296,3 +2297,114 @@ RR (quantum q): simulate in q-sized slices; maintain a FIFO ready queue; append 
 Compute times: build Gantt chart, note CT for each process, then TAT = CT − AT, WT = TAT − BT.
 
 Heuristics: shortest jobs tend to finish earlier under SJF/SRTF; RR favors fairness and responsiveness (short quantum ≈ more fair but more overhead).
+
+## Concurrency, Parallelism, Threads & Interrupts
+
+🧠 1. Concurrency
+
+Meaning:
+Multiple tasks making progress during the same time period.
+
+Key idea: Tasks overlap in time — even if only one runs at a time (on a single CPU).
+
+The OS switches between tasks so fast (via context switching) that it appears they run together.
+Common in multitasking systems — e.g., typing in one window while downloading in another.
+
+Example:
+On a single-core CPU, when the OS rapidly switches between processes P1 and P2 — both seem to run “concurrently”.
+
+Goal: Maximize CPU utilization and responsiveness.
+
+⚙️ 2. Parallelism
+
+Meaning:
+Multiple tasks executing literally at the same time.
+Requires multiple CPU cores or processors.
+True simultaneous execution (not just switching).
+Often used for computation-heavy or real-time systems.
+
+Example:
+On a quad-core CPU:
+Core 1 runs P1,
+Core 2 runs P2,
+Core 3 runs P3,
+Core 4 runs P4 — all in parallel.
+
+Goal: Improve speed and throughput.
+
+🔍 Concurrency vs Parallelism
+| Concept | Execution | Requires Multiple Cores? | Example |
+| --------------- | ------------------------------------- | ------------------------ | --------------------------------------- |
+| **Concurrency** | Tasks **appear** to run at once | ❌ No | One core switches between tasks |
+| **Parallelism** | Tasks **actually** run simultaneously | ✅ Yes | Multiple cores executing tasks together |
+
+➡️ You can have concurrency without parallelism (on one CPU).
+➡️ All parallel systems are concurrent, but not all concurrent systems are parallel.
+
+🧵 3. Threads
+
+Meaning:
+A lightweight execution unit within a process.
+Each process can contain one or more threads, sharing the same memory and resources (code, data, open files).
+Each thread has its own stack, program counter, and registers.
+Threads run concurrently (or in parallel on multi-core CPUs).
+
+Example:
+A web browser:
+One thread for user interface,
+One for network download,
+One for rendering pages,
+One for running JavaScript.
+
+Advantages:
+Faster context switching (compared to processes).
+Easier inter-thread communication (shared memory).
+More responsive applications.
+
+Disadvantages:
+Shared memory → risk of data corruption → need synchronization (mutex, semaphores, etc.).
+
+Types:
+User threads: Managed by user-level libraries.
+Kernel threads: Managed by the operating system.
+
+Multithreading models:
+Many-to-One,
+One-to-One,
+Many-to-Many.
+
+⚡ 4. Interrupts
+
+Meaning:
+A signal to the CPU indicating an event that needs immediate attention.
+Interrupts pause the current process so the OS can handle an event.
+After handling, the CPU resumes where it left off.
+
+Types of Interrupts:
+
+Type Trigger Example
+
+| Type                   | Trigger                   | Example                           |
+| ---------------------- | ------------------------- | --------------------------------- |
+| **Hardware interrupt** | From external devices     | Keyboard press, disk I/O complete |
+| **Software interrupt** | From software/system call | Trap instruction, divide by zero  |
+| **Timer interrupt**    | From system clock         | Used for preemptive multitasking  |
+
+Steps in interrupt handling:
+CPU saves the current state (program counter, registers).
+Jumps to the interrupt service routine (ISR).
+Executes ISR to handle the event.
+Restores state and resumes the interrupted task.
+
+Importance in OS:
+Enables asynchronous events (I/O completion, user input).
+Used for preemptive scheduling — CPU timer interrupt forces context switch.
+
+🧩 Summary:
+
+| Concept         | Description                                  | Key Feature           | Example                            |
+| --------------- | -------------------------------------------- | --------------------- | ---------------------------------- |
+| **Concurrency** | Multiple tasks _making progress_ together    | Task switching        | Web browser handling multiple tabs |
+| **Parallelism** | Tasks _running simultaneously_               | Multi-core execution  | Video rendering on 8 cores         |
+| **Threads**     | Lightweight execution units inside a process | Share memory          | Word processor: typing + autosave  |
+| **Interrupts**  | Signals that pause CPU to handle events      | Asynchronous handling | Keyboard press, I/O completion     |
