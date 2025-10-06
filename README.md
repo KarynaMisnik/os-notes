@@ -21,6 +21,7 @@
 - [Processes](#processes)
 - [Concurrency, Parallelism, Threads & Interrupts](#concurrency-parallelism-threads-interrupts)
 - [File systems & partitioning](#file-systems-partitioning)
+- [Firmware](#Firmware)
 
 🌐 Operating System — Key Concepts ❗
 
@@ -2551,3 +2552,101 @@ Managed by file system metadata.
 | **Formatting** | Prepares a partition with a specific file system. |
 | **Mounting** | Attaching a file system to the OS’s directory tree. |
 | **Metadata** | Information about files (size, permissions, timestamps). |
+
+⚙️ What Is Firmware?
+
+Firmware is a special type of software that is permanently stored on hardware (like a chip or ROM) to control how that hardware operates.
+It provides the low-level control and instructions the hardware needs to function.
+
+You can think of firmware as the “software brain” of a device.
+
+🧠 Analogy:
+If the hardware is the body, and the operating system is the mind, then firmware is the nervous system that tells the body how to move before the mind takes over.
+
+🧩 1. Role of Firmware
+
+Firmware sits between hardware and higher-level software (like the OS or apps).
+Its main roles:
+Initialize hardware when the system is powered on.
+Provide basic control of device functions.
+Offer an interface between the hardware and operating system.
+In computers, firmware ensures the CPU, memory, disks, and peripherals are ready for use before the OS loads.
+
+💻 2. Examples of Firmware
+
+| Device               | Firmware Example                             | Function                                              |
+| -------------------- | -------------------------------------------- | ----------------------------------------------------- |
+| **PC motherboard**   | BIOS / UEFI                                  | Starts the computer, tests hardware, loads OS         |
+| **Smartphones**      | Bootloader / device firmware                 | Starts OS (Android, iOS) and manages hardware         |
+| **Printers**         | Printer firmware                             | Controls ink heads, paper feed, communication with PC |
+| **Routers**          | Router firmware                              | Manages network traffic, Wi-Fi, firewall              |
+| **SSD / HDD**        | Disk controller firmware                     | Manages read/write, error correction, wear leveling   |
+| **Embedded devices** | IoT firmware (e.g., in thermostats, watches) | Runs device-specific logic continuously               |
+
+🧠 3. Firmware in Computer Systems
+
+When you press the power button:
+Firmware (BIOS/UEFI) starts running immediately — it’s the first code executed.
+It performs a POST (Power-On Self Test) — checks RAM, CPU, disks, keyboard.
+It finds a bootable device (e.g., SSD, USB).
+It loads the bootloader (like GRUB, Windows Boot Manager) into memory.
+The bootloader loads the operating system kernel, and control is handed over to the OS.
+So the firmware → bootloader → OS chain is how every computer starts.
+
+🔋 4. Types of Firmware (by storage & flexibility)
+
+| Type               | Description                                                              | Example                         |
+| ------------------ | ------------------------------------------------------------------------ | ------------------------------- |
+| **ROM firmware**   | Permanently written to read-only memory; cannot be changed.              | Old BIOS chips                  |
+| **EPROM / EEPROM** | Can be erased/reprogrammed with special tools.                           | Older embedded systems          |
+| **Flash firmware** | Stored in flash memory; can be updated via software (“firmware update”). | Modern BIOS/UEFI, routers, SSDs |
+
+Today, most firmware is flash-based, meaning manufacturers can release firmware updates to fix bugs or add features.
+
+🔧 5. Firmware Updates
+
+Updating firmware can:
+Fix security vulnerabilities.
+Add hardware support (e.g., new CPUs, features).
+Improve performance or stability.
+However, if interrupted (e.g., power loss), it can “brick” a device — meaning it becomes unusable because its control software is corrupted.
+
+🔐 6. Firmware vs. Software vs. Hardware
+
+| Aspect        | Firmware                     | Software                  | Hardware                   |
+| ------------- | ---------------------------- | ------------------------- | -------------------------- |
+| Location      | Stored in chip (ROM/Flash)   | Stored on disk            | Physical components        |
+| Purpose       | Controls hardware            | Performs user-level tasks | Executes instructions      |
+| Speed         | Runs before OS               | Runs after OS loads       | Executes binary operations |
+| Modifiability | Harder to change (low-level) | Easy to update            | Fixed once built           |
+
+🧭 7. BIOS vs. UEFI (Modern Firmware in PCs)
+
+| Feature       | BIOS                | UEFI                                       |
+| ------------- | ------------------- | ------------------------------------------ |
+| Era           | Older (1980s–2010s) | Modern replacement                         |
+| Interface     | Text-based          | Graphical                                  |
+| Disk support  | Up to 2 TB (MBR)    | >2 TB (GPT)                                |
+| Boot speed    | Slower              | Faster                                     |
+| Extensibility | Limited             | Supports secure boot, drivers, mouse input |
+
+Most modern systems now use UEFI firmware instead of legacy BIOS.
+
+🧠 8. Firmware in Operating System Context
+
+The OS depends on firmware during boot to discover and initialize devices.
+
+Firmware exposes interfaces (like ACPI tables, device trees) that the OS reads to manage hardware.
+
+After boot, the OS takes control and directly communicates with hardware via device drivers — but still sometimes relies on firmware routines.
+
+🧾 Summary Table
+
+| Concept         | Description                                       |
+| --------------- | ------------------------------------------------- |
+| **Firmware**    | Permanent low-level software controlling hardware |
+| **Stored on**   | ROM, EEPROM, or Flash memory                      |
+| **Runs before** | The operating system                              |
+| **Used for**    | Booting, initialization, and device control       |
+| **Examples**    | BIOS, UEFI, router firmware, printer firmware     |
+| **Updatable?**  | Yes (on modern systems via flash updates)         |
