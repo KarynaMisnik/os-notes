@@ -18,6 +18,7 @@
 - [Processor Architecture](#processor-architecture)
 - [Kernel](#kernel)
 - [Memory Management](#memory-management)
+- [Processes](#processes)
 
 🌐 Operating System — Key Concepts ❗
 
@@ -1985,3 +1986,313 @@ This allows multitasking but introduces context-switching and disk latency.
 Sometimes two or more processes need to share data efficiently.
 OS can map a shared region into both processes’ address spaces.
 Used for interprocess communication (IPC) — much faster than message passing.
+
+## Processes
+
+🧩 1. What is a Process?
+
+A process is a program in execution — an active entity with its own:
+Code (text)
+Data (variables)
+Stack (function calls)
+Registers (CPU state)
+Program Counter (next instruction)
+
+The OS manages multiple processes, keeping their info in a Process Control Block (PCB) — storing ID, state, CPU registers, memory info, etc.
+
+⚙️ 2. Process States
+
+A process moves through several states:
+
+```bash
+| State               | Meaning                  |
+| ------------------- | ------------------------ |
+| **New**             | Being created            |
+| **Ready**           | Waiting for CPU          |
+| **Running**         | Currently executing      |
+| **Waiting/Blocked** | Waiting for I/O or event |
+| **Terminated**      | Finished execution       |
+```
+
+The OS’s scheduler decides which ready process gets CPU next.
+
+🕒 3. CPU Scheduling Overview
+
+The scheduler selects which process runs next when:
+
+CPU becomes idle, a running process finishes or blocks, or a higher-priority process arrives (in preemptive systems).
+
+Types of scheduling:
+
+| Type               | Description                                                           |
+| ------------------ | --------------------------------------------------------------------- |
+| **Preemptive**     | CPU can be taken away from a process (e.g., Round Robin, SRTF).       |
+| **Non-preemptive** | Process keeps CPU until it voluntarily releases it (e.g., FCFS, SJF). |
+
+⚡ 4. Key Scheduling Algorithms
+(1) FCFS — First Come, First Served
+
+Non-preemptive.
+Processes run in order of arrival.
+
+How to calculate:
+Sort by arrival time.
+
+Calculate completion time sequentially.
+WT = TAT − BT.
+TAT = CT − AT.
+
+✅ Simple but can cause convoy effect (long jobs delay short ones).
+
+(2) SJF — Shortest Job First
+Selects the process with the shortest burst time next.
+
+Non-preemptive.
+Pros: Minimal average waiting time.
+Cons: Requires knowing burst time in advance.
+
+(3) SRTF — Shortest Remaining Time First
+Preemptive version of SJF.
+If a new process arrives with a shorter remaining time → preempts current one.
+Used when: Processes arrive at different times.
+
+(4) RR — Round Robin
+Each process gets a fixed time quantum (q).
+After q expires, process goes to the end of the ready queue if not done.
+Preemptive and fair — used in time-sharing systems.
+
+✅ Formula trick: Shorter quantum → more responsive, more overhead.
+
+(5) Priority Scheduling
+CPU assigned to process with highest priority (lowest number often = highest).
+Can be preemptive or non-preemptive.
+SJF is a special case of this (priority = burst time).
+Problem: Starvation → fixed by aging (gradually increasing waiting process priority).
+
+(6) Multilevel Queue Scheduling
+Ready queue divided into multiple queues (e.g., system, interactive, batch).
+Each has its own scheduling policy.
+Processes permanently belong to one queue.
+
+(7) Multilevel Feedback Queue
+Processes can move between queues (e.g., from high-priority short jobs to lower priority if they use too much CPU).
+Used in real OSes for adaptive scheduling.
+
+📊 5. Quick Formula Cheat Sheet
+
+| Term                      | Formula                               |
+| ------------------------- | ------------------------------------- |
+| **Turnaround Time (TAT)** | CT − AT                               |
+| **Waiting Time (WT)**     | TAT − BT                              |
+| **Response Time (RT)**    | First CPU start time − AT             |
+| **Throughput**            | # of processes completed / total time |
+| **CPU Utilization**       | (Busy time / Total time) × 100%       |
+
+🚀 6. How to Solve Scheduling Problems (Step-by-step)
+
+List all processes (Arrival, Burst, Priority).
+Sort by arrival time (for preemptive: track at each time).
+Use Gantt chart — draw timeline showing which process runs when.
+Note completion time (CT) for each process.
+Compute TAT, WT, and average WT/TAT.
+
+🧠 7. Example Quick Practice (RR)
+
+| Process | Arrival | Burst |
+| ------- | ------- | ----- |
+| P1      | 0       | 5     |
+| P2      | 1       | 7     |
+| P3      | 3       | 4     |
+
+Quantum = 2
+👉 Follow queue in 2-unit chunks.
+👉 Rotate ready processes as they arrive.
+👉 Continue until all finish.
+
+Resulting order: P1 → P2 → P3 → P1 → P2 → P3 → P2
+Compute CT, WT, TAT accordingly.
+
+💡 8. Key Takeaways
+
+SJF/SRTF → minimal waiting time but needs prediction.
+RR → fairness, ideal for time-sharing.
+FCFS → simple, poor for mixed job sizes.
+Priority → flexible but may cause starvation.
+Preemptive scheduling → improves responsiveness.
+
+🧩 CPU Scheduling Cheat Table
+
+| **Algorithm**                            | **Preemptive?** | **Best Used For**                                               | **Advantages**                  | **Disadvantages / When Not to Use**                       | **Example Use Case**                                |
+| ---------------------------------------- | --------------- | --------------------------------------------------------------- | ------------------------------- | --------------------------------------------------------- | --------------------------------------------------- |
+| **FCFS (First Come, First Served)**      | ❌ No           | Batch systems, simple queues                                    | Very easy to implement          | Long jobs block short ones (**convoy effect**)            | Printing queue, simple servers                      |
+| **SJF (Shortest Job First)**             | ❌ No           | Predictable CPU burst workloads                                 | Lowest average waiting time     | Needs prior knowledge of burst time; unfair to long jobs  | Batch systems with known job lengths                |
+| **SRTF (Shortest Remaining Time First)** | ✅ Yes          | Mixed short/long jobs arriving at different times               | Minimizes average waiting time  | High overhead; starvation for long jobs                   | Real-time systems needing responsiveness            |
+| **Priority Scheduling**                  | ✅ or ❌        | Systems with critical tasks                                     | Allows prioritization           | Starvation of low-priority jobs (fixed by **aging**)      | Real-time OS, print queues                          |
+| **Round Robin (RR)**                     | ✅ Yes          | Time-sharing systems                                            | Fair, responsive to all users   | High overhead if quantum is too small; poor for long jobs | General-purpose OS (Windows, Linux user scheduling) |
+| **Multilevel Queue**                     | ✅ Yes          | Systems with distinct process types (e.g., system vs user jobs) | Organized, simple               | No movement between queues; rigid                         | Desktop OS combining interactive & batch            |
+| **Multilevel Feedback Queue (MLFQ)**     | ✅ Yes          | Adaptive systems, mixed workloads                               | Very flexible, fair, responsive | Complex to tune; hard to predict behavior                 | Windows, Linux, macOS kernels                       |
+| **Lottery Scheduling**                   | ✅ Yes          | Experimental or research OS                                     | Randomized fairness             | Unpredictable results; not deterministic                  | Simulations, testing environments                   |
+
+⚙️ Key Concepts You Must Remember
+
+| Concept                   | Explanation                              |
+| ------------------------- | ---------------------------------------- |
+| **Arrival Time (AT)**     | When a process enters the ready queue    |
+| **Burst Time (BT)**       | Total CPU time process needs             |
+| **Completion Time (CT)**  | Time when process finishes execution     |
+| **Turnaround Time (TAT)** | CT − AT                                  |
+| **Waiting Time (WT)**     | TAT − BT                                 |
+| **Response Time (RT)**    | Time from arrival to first CPU execution |
+| **Throughput**            | # of processes completed / total time    |
+| **CPU Utilization**       | % of time CPU is busy                    |
+
+🧠 How to Choose Algorithm
+
+| **Keyword in question**                          | **Likely algorithm**          |
+| ------------------------------------------------ | ----------------------------- |
+| “Interactive system,” “time-sharing,” “fairness” | **Round Robin**               |
+| “Shortest job,” “minimize waiting time”          | **SJF / SRTF**                |
+| “Priorities,” “critical tasks”                   | **Priority Scheduling**       |
+| “Adaptive,” “mix of processes”                   | **MLFQ**                      |
+| “Simple,” “batch jobs”                           | **FCFS**                      |
+| “Processes can move between queues”              | **Multilevel Feedback Queue** |
+
+🧮 Formula Summary (always recall)
+
+```bash
+Turnaround Time (TAT) = Completion Time - Arrival Time
+Waiting Time (WT) = Turnaround Time - Burst Time
+Response Time (RT) = First CPU start - Arrival Time
+```
+
+🧩 Worked examples (Gantt charts + calculations)
+
+Given processes
+| Process | Arrival (ms) | Burst (ms) |
+| ------- | ------------ | ---------- |
+| P0 | 0 | 9 |
+| P1 | 1 | 4 |
+| P2 | 2 | 9 |
+
+We’ll compute Completion Time (CT), Turnaround Time (TAT = CT − AT), Waiting Time (WT = TAT − BT) and the average waiting time for each scheduling policy.
+
+1. FCFS (First Come, First Served)
+   Rule: Non-preemptive, run in arrival order.
+   Order: P0 → P1 → P2
+   Gantt chart (time ranges):
+
+```bash
+P0: 0 — 9
+P1: 9 — 13
+P2: 13 — 22
+```
+
+Completion times:
+CT(P0) = 9
+CT(P1) = 13
+CT(P2) = 22
+
+Turnaround times (TAT = CT − AT):
+TAT(P0) = 9 − 0 = 9
+TAT(P1) = 13 − 1 = 12
+TAT(P2) = 22 − 2 = 20
+
+Waiting times (WT = TAT − BT):
+WT(P0) = 9 − 9 = 0
+WT(P1) = 12 − 4 = 8
+WT(P2) = 20 − 9 = 11
+Average waiting time = (0 + 8 + 11) / 3 = 19/3 = 6.333… ms
+
+2. RR with quantum = 2 (Round Robin, q = 2)
+
+Rule: Preemptive; each ready process gets up to 2 ms, then goes to the back of the ready queue if not finished. New arrivals are appended as they occur.
+
+Simulate step-by-step and keep ready queue order in mind.
+Timeline (quantum slices):
+
+```bash
+t=0–2   : P0 (rem 9→7)
+t=2–4   : P1 (rem 4→2)
+t=4–6   : P0 (rem 7→5)
+t=6–8   : P2 (rem 9→7)
+t=8–10  : P1 (rem 2→0)  --> P1 completes at t=10
+t=10–12 : P0 (rem 5→3)
+t=12–14 : P2 (rem 7→5)
+t=14–16 : P0 (rem 3→1)
+t=16–18 : P2 (rem 5→3)
+t=18–19 : P0 (rem 1→0)  --> P0 completes at t=19
+t=19–21 : P2 (rem 3→1)
+t=21–22 : P2 (rem 1→0)  --> P2 completes at t=22
+```
+
+Completion times:
+CT(P1) = 10
+CT(P0) = 19
+CT(P2) = 22
+
+Turnaround (CT − AT):
+TAT(P0) = 19 − 0 = 19
+TAT(P1) = 10 − 1 = 9
+TAT(P2) = 22 − 2 = 20
+
+Waiting times (TAT − BT):
+WT(P0) = 19 − 9 = 10
+WT(P1) = 9 − 4 = 5
+WT(P2) = 20 − 9 = 11
+
+Average waiting time = (10 + 5 + 11) / 3 = 26/3 = 8.666… ms
+
+3. SRTF (Shortest Remaining Time First) — preemptive SJF
+
+Rule: Always run the ready process with the smallest remaining CPU time; preempt when a newly arrived process has smaller remaining time.
+
+Simulate:
+t=0–1: P0 runs (rem 9→8)
+t=1: P1 arrives (burst 4) — P1 has remaining 4 < P0's 8 → preempt P0
+t=1–5: P1 runs to completion (4 ms) → CT(P1) = 5
+t=5: ready: P0 (rem 8) and P2 (arrived at t=2, rem 9). Shortest is P0.
+t=5–13: P0 runs remaining 8 → CT(P0) = 13
+t=13–22: P2 runs remaining 9 → CT(P2) = 22
+
+Completion times:
+CT(P1) = 5
+CT(P0) = 13
+CT(P2) = 22
+
+Turnaround (CT − AT):
+TAT(P0) = 13 − 0 = 13
+TAT(P1) = 5 − 1 = 4
+TAT(P2) = 22 − 2 = 20
+
+Waiting times (TAT − BT):
+WT(P0) = 13 − 9 = 4
+WT(P1) = 4 − 4 = 0
+WT(P2) = 20 − 9 = 11
+
+Average waiting time = (4 + 0 + 11) / 3 = 15/3 = 5 ms
+
+```bash
+| Algorithm |     Avg Waiting Time |
+| --------- | -------------------: |
+| FCFS      |            6.333… ms |
+| RR (q=2)  |            8.666… ms |
+| SRTF      | **5 ms** (best here) |
+```
+
+Observations:
+
+SRTF minimized average waiting time (as expected for SJF family).
+RR increased average waiting time here because the quantum caused many context switches and interruptions for the long P0 and P2. RR improves responsiveness but can increase average wait for longer jobs, depending on arrival mix and quantum.
+FCFS is simple but suffers from the convoy effect (long P0 delays others that arrive later).
+How to apply these quickly in exam problems (cheat tips)
+
+FCFS: sort by arrival, run sequentially — easy CT accumulation.
+SJF (non-preemptive): when CPU free, pick shortest burst among ready; no preemption.
+
+SRTF (preemptive): at each arrival or completion, compare remaining times and possibly preempt. Useful trick: track remaining times and only re-evaluate at arrival/completion instants.
+
+RR (quantum q): simulate in q-sized slices; maintain a FIFO ready queue; append new arrivals when they arrive (if at same instant quantum ends, make a consistent rule — arrivals at t are enqueued before choosing next).
+
+Compute times: build Gantt chart, note CT for each process, then TAT = CT − AT, WT = TAT − BT.
+
+Heuristics: shortest jobs tend to finish earlier under SJF/SRTF; RR favors fairness and responsiveness (short quantum ≈ more fair but more overhead).
