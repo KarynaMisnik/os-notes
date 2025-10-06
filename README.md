@@ -19,8 +19,8 @@
 - [Kernel](#kernel)
 - [Memory Management](#memory-management)
 - [Processes](#processes)
-- [Concurrency, Parallelism, Threads & Interrupts](#concurrency-parallelism-threads-interrupts)
-- [File systems & partitioning](#file-systems-partitioning)
+- [Concurrency, Parallelism, Threads & Interrupts](#concurrency-parallelism-threads-&-interrupts)
+- [File systems & partitioning](#file-systems-&-partitioning)
 - [Firmware](#Firmware)
 
 🌐 Operating System — Key Concepts ❗
